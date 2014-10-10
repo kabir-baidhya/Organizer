@@ -1,0 +1,20 @@
+{
+    "name": "gckabir/organizer",
+    "description": "Easily manage, organize, minify/compress static files (JS/CSS)",
+    "authors": [
+        {
+            "name": "Kabir Baidhya",
+            "email": "kabeer182010@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0",
+        "tedivm/jshrink": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gckabir\\Organizer\\": "src/"
+        }
+    }
+}

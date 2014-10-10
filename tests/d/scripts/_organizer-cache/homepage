@@ -1,0 +1,1 @@
+(function(){var $vars={"message":"sdfsdf2014-10-10 14:55:43","success":"yes","foo":"bar"};document.write($vars.message+'<br>');document.write('Success = '+$vars.success+'<br>');document.write('this is Foo bar<br>');document.write('this is Hello '+$vars.foo+'<br>');(function(){document.write('this is bar\joo<br>');})();})();
