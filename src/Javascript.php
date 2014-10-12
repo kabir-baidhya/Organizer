@@ -16,8 +16,6 @@ namespace Gckabir\Organizer
 			'parameter'	=> '_organizer-serve',
 			'minify'	=> false,
 			'wrap'		=> false, 
-
-			
 			);
 
 		private $namespace = null;
