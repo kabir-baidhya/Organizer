@@ -1,0 +1,4 @@
+[2014 Oct 12]
+	- Modified Organizer Signature
+	- Javascript: added option to include dependencies when code is wrapped using 'wrap' option
+

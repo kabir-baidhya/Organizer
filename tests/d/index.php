@@ -6,9 +6,9 @@ use Gckabir\Organizer\Javascript;
 Javascript::init([
 	'basePath'	=> 'scripts/',
 	'cache'		=> false,
-	'minify'	=> false,
+	'minify'	=> true,
     'wrap'      => true, 
-    
+    'dependencies'  => ['window', 'HottieHunter']
 ]);
 
 Javascript::serve();//server on the same page

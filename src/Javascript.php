@@ -16,6 +16,7 @@ namespace Gckabir\Organizer
 			'parameter'	=> '_organizer-serve',
 			'minify'	=> false,
 			'wrap'		=> false, 
+			'dependencies'	=> array()
 			);
 
 		private $namespace = null;
@@ -67,41 +68,57 @@ namespace Gckabir\Organizer
 			$this->output = $merged;
 		}
 
+		private function signature() {
+
+			return  
+			'/** '."\n".
+			' * '.$this->namespace.' | '.gmdate("M d Y H:i:s")." UTC\n".
+			' * Organized by Organizer'."\n".
+			' * https://github.com/kabir-baidhya/organizer'.
+			' */'."\n";
+
+		}
+		
 		public function output()
 		{
-			$javascript = '/** '."\n"
-			. ' * '.$this->namespace."\n"
-			. ' * Organized by Organizer'."\n"
-			. ' */'."\n";
+			$options = static::$config;
+
+			$javascript = $this->signature();
 			
 			//variables
-			if(static::$config['useStrict'] === true) {
+			if($options['useStrict'] == true) {
 				$javascript .= "'use strict';\n";
 			}
 
-			if(static::$config['wrap']) {
-			
+			if($options['wrap'] == true) {
+
 				$token= 'function';
 				$lBrace = '{ ';
 				$rBrace = '}';
 				$lBracket = chr(40);
 				$rBracket = chr(41);
 
-				$javascript .= $lBracket.$token.$lBracket.$rBracket.$lBrace."\n";
+				if(is_array($options['dependencies'])) {
+					$depenString = trim(implode(',', $options['dependencies']) );
+				} else {
+					$depenString = trim($options['dependencies']);
+				} 
+
+				$javascript .= $lBracket.$token.$lBracket.$depenString.$rBracket.$lBrace."\n";
 			}
 			
 			$javascript .= 'var $vars = '. json_encode( (object) $this->variables ).";\n";
 			$javascript .= $this->output."\n";
 
-			if(static::$config['wrap']) {
-				$javascript .= $rBrace.$rBracket.$lBracket.$rBracket.';';
+			if($options['wrap'] == true) {
+				$javascript .= $rBrace.$rBracket.$lBracket.$depenString.$rBracket.';';
 			}
 			return $javascript;
 		}
 
 		public function outputMinified()
 		{
-			return \JShrink\Minifier::minify($this->output());
+			return $this->signature(). \JShrink\Minifier::minify($this->output());	
 		}
 
 		public function build()
