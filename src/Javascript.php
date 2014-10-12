@@ -15,6 +15,7 @@ namespace Gckabir\Organizer
 			'cacheDir'	=> '_organizer-cache/',
 			'parameter'	=> '_organizer-serve',
 			'minify'	=> false,
+			'wrap'		=> false,
 			);
 
 		private $namespace = null;
@@ -78,16 +79,23 @@ namespace Gckabir\Organizer
 				$javascript .= "'use strict';\n";
 			}
 
-			$token= 'function';
-			$lBrace = '{ ';
-			$rBrace = '}';
-			$lBracket = chr(40);
-			$rBracket = chr(41);
+			if(static::$config['wrap']) {
+			
+				$token= 'function';
+				$lBrace = '{ ';
+				$rBrace = '}';
+				$lBracket = chr(40);
+				$rBracket = chr(41);
 
-			$javascript .= $lBracket.$token.$lBracket.$rBracket.$lBrace."\n";
+				$javascript .= $lBracket.$token.$lBracket.$rBracket.$lBrace."\n";
+			}
+			
 			$javascript .= 'var $vars = '. json_encode( (object) $this->variables ).";\n";
 			$javascript .= $this->output."\n";
-			$javascript .= $rBrace.$rBracket.$lBracket.$rBracket.';';
+
+			if(static::$config['wrap']) {
+				$javascript .= $rBrace.$rBracket.$lBracket.$rBracket.';';
+			}
 			return $javascript;
 		}
 
