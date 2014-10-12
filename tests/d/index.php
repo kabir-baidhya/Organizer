@@ -7,7 +7,8 @@ Javascript::init([
 	'basePath'	=> 'scripts/',
 	'cache'		=> false,
 	'minify'	=> false,
-    'wrap'      => true,
+    'wrap'      => true, 
+    
 ]);
 
 Javascript::serve();//server on the same page

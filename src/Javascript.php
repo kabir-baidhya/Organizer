@@ -15,7 +15,9 @@ namespace Gckabir\Organizer
 			'cacheDir'	=> '_organizer-cache/',
 			'parameter'	=> '_organizer-serve',
 			'minify'	=> false,
-			'wrap'		=> false,
+			'wrap'		=> false, 
+
+			
 			);
 
 		private $namespace = null;
