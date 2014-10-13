@@ -33,11 +33,24 @@ namespace Gckabir\Organizer
 			$this->version = $version;
 		}
 
+		/**
+		 * Initialize dynamic variables (in bulk)
+		 */
 		public function vars(array $variables)
 		{
 			$this->variables = $variables;
 		}
 
+		/**
+		 * Sets a value of dynamic variable
+		 */
+		public function setVar($key, $value) {
+			$this->variables[$key]	 = $value;
+		}
+
+		/**
+		 * Add new javascript file 
+		 */
 		public function add($js)
 		{
 			if(is_array($js))
@@ -51,18 +64,57 @@ namespace Gckabir\Organizer
 			return $this;
 		}
 
+		/**
+		 * Add a javascript file before other scripts 
+		 */
+		public function addBefore($js) {
+			if(is_array($js)) 
+			{
+				$this->scripts = array_merge($js, $this->scripts);
+			}else if(is_string($js) and !in_array($js, $this->scripts)) {
+				array_unshift($this->scripts, $js);
+			}
+
+			return $this;
+		}
+
+		/**
+		 * Add javascript code directly 
+		 */
+		public function addScript($string) {
+			if(!is_string($string)) {
+				throw new OrganizerException("Invalid Javascript code");
+			}
+
+			$script = (object) array(
+				'type' 		=> 'embeded',
+				'script'	=> $string
+			);
+			$this->scripts[] = $script;
+		}
+
 		private function merge()
 		{
 			$merged = '';
 			foreach($this->scripts as $singleJS)
 			{
-				$path = static::$config['basePath'].$singleJS.'.js';
-				if(file_exists($path))
-				{
-					ob_start();
-					include_once($path);
-					$merged .= "\n".ob_get_clean();
-				} else throw new OrganizerException("{$path} not found");
+				if(is_string($singleJS)) {
+
+					$path = static::$config['basePath'].$singleJS.'.js';
+					if(file_exists($path))
+					{
+						ob_start();
+						include_once($path);
+						$script = ob_get_clean();
+					} else throw new OrganizerException("{$path} not found");
+					
+				} else if(is_object($singleJS) and @$singleJS->type == 'embeded') {
+					$script = $singleJS->script;
+				} else {
+					throw new OrganizerException("Invalid Javascript");
+				}
+
+				$merged .= "\n".$script;
 			}
 
 			$this->output = $merged;

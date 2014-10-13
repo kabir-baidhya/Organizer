@@ -17,7 +17,6 @@ Javascript::serve();//server on the same page
 $js = Javascript::organize('homepage', [
 	'foobar',
 	'hello',
-	'bar/joo'
 ], '2.9');
 
 
@@ -26,6 +25,9 @@ $js->vars([
 	'success'	=> 'yes',
 	'foo'		=> 'bar'
 ]);
+$js->addBefore('bar/joo');
+$js->setVar('foo', 'Foo Bar modified');
+$js->addScript('document.write(JSON.stringify($vars));');
 
 ?>
 <script type="text/javascript">
