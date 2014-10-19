@@ -27,12 +27,12 @@ class Css extends OrganizerObject {
 	}
 
 	public function includeHere() {
-		return '<link rel="stylesheet" type="text/css" href="'.$this->build().'" >';
+		echo '<link rel="stylesheet" type="text/css" href="'.$this->build().'" >';
 	}
 
 	public function embedHere() {
 		$content = $this->preEmbedContent();
-		return '<style type="text/css">'.$content.'</style>';
+		echo '<style type="text/css">'.$content.'</style>';
 	}	
 
 }

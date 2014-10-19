@@ -101,12 +101,12 @@ class Javascript extends OrganizerObject {
 	}
 
 	public function includeHere() {
-		return '<script type="text/javascript" src="'.$this->build().'" ></script>';
+		echo '<script type="text/javascript" src="'.$this->build().'" ></script>';
 	}
 
 	public function embedHere() {
 		$content = $this->preEmbedContent();
-		return '<script type="text/javascript">'.$content.'</script>';
+		echo '<script type="text/javascript">'.$content.'</script>';
 	}	
 
 	
