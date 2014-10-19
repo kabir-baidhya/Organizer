@@ -1,5 +1,0 @@
-/** 
- * homepage | Oct 13 2014 10:20:23 UTC
- * Organized by Organizer
- * https://github.com/kabir-baidhya/organizer */
-(function(window,HottieHunter){var $vars={"message":"sdfsdf2014-10-13 16:05:23","success":"yes","foo":"Foo Bar modified"};(function(){document.write('this is bar\joo<br>');})();document.write($vars.message+'<br>');document.write('Success = '+$vars.success+'<br>');document.write('this is Foo bar<br>');document.write('baseurl = '+HottieHunter.baseUrl());document.write('this is Hello '+$vars.foo+'<br>');document.write(JSON.stringify($vars));})(window,HottieHunter);

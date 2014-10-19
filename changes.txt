@@ -2,3 +2,7 @@
 	- Modified Organizer Signature
 	- Javascript: added option to include dependencies when code is wrapped using 'wrap' option
 
+[2014 Oct 19]
+	- Added OZR class
+	- Changed internal coding
+	- Added suppport for CSS
