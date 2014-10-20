@@ -143,7 +143,7 @@ abstract class OrganizerObject {
 	}
 
 	protected function uniqueBundleString() {
-		return $this->getType().'-'.$this->bundle;
+		return base64_encode($this->getType().'-'.$this->bundle);
 	}
 
 	protected function preEmbedContent() {

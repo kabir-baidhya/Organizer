@@ -2,13 +2,11 @@
 
 namespace Gckabir\Organizer;
 
-use Gckabir\Organizer\AwesomeCache\CacheData;
-
 class Javascript extends OrganizerObject {
 
 	protected $variables = array();
 	protected $extension = '.js';
-	protected $version = '1.0';
+	
 
 
 	public function __construct($bundle, array $scripts, $version)

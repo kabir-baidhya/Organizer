@@ -3,12 +3,10 @@
 namespace Gckabir\Organizer;
 
 
-use Gckabir\Organizer\AwesomeCache\CacheData;
-
 class Css extends OrganizerObject {
 
 	protected $extension = '.css';
-	protected $version = '1.0';
+	
 
 
 	public function __construct($bundle, array $styles, $version)

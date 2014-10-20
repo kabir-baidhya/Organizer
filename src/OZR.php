@@ -29,14 +29,20 @@ class OZR {
 			'cache'		=> false,
 			'parameter'	=> '_OZRjsSX',
 			),
+		'html'	=> array(
+			'parameter'	=> '_OZRhtmlSX',
+			'basePath' 	=> 'templates/',
+			'minify'	=> false,
+			'cache'		=> false,
+			)
 		);
 
 	private static $organizedJs;
 	private static $organizedCss;
-
+	private static $initialized = false;
 
 	/* Static Methods */
-	public static function init( array $config)
+	public static function init( array $config = array())
 	{
 		static::$config['serverUrl'] = $_SERVER['REQUEST_URI'];//default
 		
@@ -63,12 +69,17 @@ class OZR {
 
 		CacheData::config($cacheConfig);
 
+
+		static::$initialized = true;
+		
 		if(static::$config['automaticServe']) {
 			static::serve();
 		}
 	}
 
 	public static function getConfig($var = null) {
+
+		static::checkInitialized();
 
 		if($var) {
 			return static::$config[$var];
@@ -79,18 +90,28 @@ class OZR {
 
 	public static function organizeJS($bundle, array $scripts = array(), $version = '1.0')
 	{
+		static::checkInitialized();
 		return new Javascript($bundle, $scripts, $version);
 	}
 
 	public static function organizeCSS($bundle, array $styles = array(), $version = '1.0')
 	{
+		static::checkInitialized();
 		return new Css($bundle, $styles, $version);
+	}
+
+	public static function organizeHTML($bundle, array $templates = array(), $version = '1.0') 
+	{
+		static::checkInitialized();
+		return new Html($bundle, $templates, $version);
 	}
 
 	public static function serve()
 	{
+		static::checkInitialized();
 		$jsQuery = static::$config['javascript']['parameter'];
 		$cssQuery = static::$config['css']['parameter'];
+		$htmlQuery = static::$config['html']['parameter'];
 
 		
 		if(isset($_GET[$jsQuery])) {
@@ -102,7 +123,12 @@ class OZR {
 
 			$bundle = $_GET[$cssQuery];
 			$contentType = 'text/css';
-		} 
+
+		} else if(isset($_GET[$htmlQuery])) {
+			$bundle = $_GET[$htmlQuery];
+			$contentType = 'text/html';
+
+		}
 
 		if(@$bundle) {
 
@@ -118,5 +144,13 @@ class OZR {
 			}
 			die();
 		} 
+	}
+
+	private static function checkInitialized() {
+		if(!static::$initialized){
+
+			throw new OrganizerException("Organizer not initialized");
+			die();
+		}
 	}
 }
