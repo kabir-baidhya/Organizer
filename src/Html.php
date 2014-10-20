@@ -3,7 +3,7 @@ namespace Gckabir\Organizer;
 
 
 class Html extends OrganizerObject {
-	protected $extension = '.css';
+	protected $extension = '.html';
 
 	public function __construct($bundle, array $templates, $version)
 	{

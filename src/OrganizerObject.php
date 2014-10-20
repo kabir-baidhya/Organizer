@@ -158,6 +158,7 @@ abstract class OrganizerObject {
 			$content = $data->cachedData();
 
 		} else {
+			
 			$this->build();
 			$content = $this->config['minify'] ? $this->outputMinified() : $this->output();
 		}
