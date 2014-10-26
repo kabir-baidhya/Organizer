@@ -1,8 +1,0 @@
-[2014 Oct 12]
-	- Modified Organizer Signature
-	- Javascript: added option to include dependencies when code is wrapped using 'wrap' option
-
-[2014 Oct 19]
-	- Drastic internal changes, changed internal coding
-	- Added OZR class
-	- Added suppport for CSS
