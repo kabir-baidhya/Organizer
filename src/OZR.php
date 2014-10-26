@@ -44,7 +44,9 @@ class OZR {
 	/* Static Methods */
 	public static function init( array $config = array())
 	{
-		static::$config['serverUrl'] = $_SERVER['REQUEST_URI'];//default
+		if(isset($_SERVER['REQUEST_URI'])) {
+			static::$config['serverUrl'] = $_SERVER['REQUEST_URI'];//default
+		}
 		
 		# Overriding config
 		foreach($config as $key => $value) {
