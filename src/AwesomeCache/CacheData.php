@@ -70,9 +70,13 @@ class CacheData	{
 	{
 		if( !$this->isCached() ) return 0 ;
 
-		$last_modified_time = filemtime($this->file);
-		$duration = time() - $last_modified_time;
+		$duration = time() - $this->lastModified();
 		return $duration;
+	}
+
+	public function lastModified() {
+		clearstatcache();
+		return filemtime($this->file);
 	}
 
 	public function isCachedAndUsable()

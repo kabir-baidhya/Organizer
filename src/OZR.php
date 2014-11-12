@@ -18,6 +18,7 @@ class OZR {
 			'minify'			=> false,
 			'cache'				=> false,
 			'parameter'	=> '_OZRcssSX',
+			'browserCacheMaxAge' => 864000, //10days
 			), 
 		'javascript'	=> array(
 
@@ -28,12 +29,14 @@ class OZR {
 			'minify'	=> false,
 			'cache'		=> false,
 			'parameter'	=> '_OZRjsSX',
+			'browserCacheMaxAge' => 864000, //10days
 			),
 		'html'	=> array(
 			'parameter'	=> '_OZRhtmlSX',
 			'basePath' 	=> 'templates/',
 			'minify'	=> false,
 			'cache'		=> false,
+			'browserCacheMaxAge' => 864000, //10days
 			)
 		);
 
@@ -115,18 +118,21 @@ class OZR {
 		$cssQuery = static::$config['css']['parameter'];
 		$htmlQuery = static::$config['html']['parameter'];
 
-		
 		if(isset($_GET[$jsQuery])) {
 
+			$config = static::getConfig('javascript');
 			$bundle = $_GET[$jsQuery];
 			$contentType = 'text/javascript';
 
 		} else if(isset($_GET[$cssQuery]))  {
 
+			$config = static::getConfig('css');
 			$bundle = $_GET[$cssQuery];
 			$contentType = 'text/css';
 
 		} else if(isset($_GET[$htmlQuery])) {
+
+			$config = static::getConfig('html');
 			$bundle = $_GET[$htmlQuery];
 			$contentType = 'text/html';
 
@@ -137,7 +143,29 @@ class OZR {
 			$content = new CacheData($bundle);
 			if($content->isCachedAndUsable() )
 			{
+				
+				$lastModifiedDate = $content->lastModified();
+				
+				if(!$config['browserCacheMaxAge']) 
+					$config['browserCacheMaxAge'] = 0;
+				
+				$expires = $config['browserCacheMaxAge'];
+				$lmDate = gmdate("D, d M Y H:i:s", $lastModifiedDate)." GMT";
+				$etag = md5($bundle);
+				
 				header('Content-Type: '.$contentType);
+				header('Cache-Control: private, max-age='.$expires.', pre-check='.$expires);
+				header("Pragma: private");
+				header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
+
+				header("Last-Modified: ".$lmDate);
+				header("Etag: $etag"); 
+
+				if (@$_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lmDate || @trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
+					header("HTTP/1.1 304 Not Modified"); 
+					exit; 
+				}
+
 				echo $content->cachedData();
 			} else {
 				# invalid query | cache expired | file not found
