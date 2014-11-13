@@ -30,6 +30,7 @@ class OZR {
 			'cache'		=> false,
 			'parameter'	=> '_OZRjsSX',
 			'browserCacheMaxAge' => 864000, //10days
+			'appendVariables'	=> false
 			),
 		'html'	=> array(
 			'parameter'	=> '_OZRhtmlSX',
@@ -143,29 +144,28 @@ class OZR {
 			$content = new CacheData($bundle);
 			if($content->isCachedAndUsable() )
 			{
-				
-				$lastModifiedDate = $content->lastModified();
+				header('Content-Type: '.$contentType);
+
+				# Cache Control headers
 				
 				if(!$config['browserCacheMaxAge']) 
 					$config['browserCacheMaxAge'] = 0;
 				
 				$expires = $config['browserCacheMaxAge'];
-				$lmDate = gmdate("D, d M Y H:i:s", $lastModifiedDate)." GMT";
+				$lastModifiedDate = gmdate("D, d M Y H:i:s", $content->lastModified())." GMT";
 				$etag = md5($bundle);
-				
-				header('Content-Type: '.$contentType);
 				header('Cache-Control: private, max-age='.$expires.', pre-check='.$expires);
 				header("Pragma: private");
 				header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
-
-				header("Last-Modified: ".$lmDate);
+				header("Last-Modified: ".$lastModifiedDate);
 				header("Etag: $etag"); 
 
-				if (@$_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lmDate || @trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
+				if (@$_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModifiedDate || @trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
 					header("HTTP/1.1 304 Not Modified"); 
 					exit; 
 				}
 
+				# Echo file content
 				echo $content->cachedData();
 			} else {
 				# invalid query | cache expired | file not found

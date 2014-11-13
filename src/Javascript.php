@@ -6,8 +6,6 @@ class Javascript extends OrganizerObject {
 
 	protected $variables = array();
 	protected $extension = '.js';
-	
-
 
 	public function __construct($bundle, array $scripts, $version)
 	{
@@ -80,7 +78,11 @@ class Javascript extends OrganizerObject {
 
 		} else {
 
-			$javascript .= 'var $vars = '. $variablesJson .";\n";
+			if($this->config['appendVariables'] == true) {
+				$javascript .= 'var $vars = '. $this->appendVarsToObject('$vars', $variablesJson) .";\n";
+			} else {
+				$javascript .= 'var $vars = '. $variablesJson .";\n";
+			}
 
 		}
 		
@@ -107,6 +109,16 @@ class Javascript extends OrganizerObject {
 		echo '<script type="text/javascript">'.$content.'</script>';
 	}	
 
-	
+	/** 
+	 * Function for appending variables to '$vars' 
+	 * used only if 'appendVariables' is true
+	 */
+	private function appendVarsToObject($wrapperObject, $vars) {
+
+		$func =  'function (a,b){for(var c in b)a[c]=b[c];return a}';
+
+		return $func."($wrapperObject || {}, $vars)";
+	}
+
 }
 
