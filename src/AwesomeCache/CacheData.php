@@ -58,7 +58,7 @@ class CacheData	{
 
 	public function isCached()
 	{
-		return file_exists($this->file);
+		return file_exists($this->file) && is_file($this->file);
 	}
 
 	public function isUsable()
@@ -104,11 +104,27 @@ class CacheData	{
 		closedir($dh);
 	}
 
-	public static function clear($key)
-	{
+	public static function countAll() {
+		$count = 0;
 		$dir = static::$config['directory'];
 
-		if( $this->isCached() ) @unlink($dir.$file);
+		$dh = opendir($dir);
+		while($file = readdir($dh))
+		{
+			if(!is_dir($file))
+			{
+				@unlink($dir.$file);
+			}
+		}
+		closedir($dh);
+		return $count;
+	}
+
+	public static function clear($key)
+	{
+		$that = new static($key);
+
+		if( $that->isCached() ) @unlink($that->file);
 	}
 
 }	

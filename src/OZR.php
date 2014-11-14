@@ -158,9 +158,12 @@ class OZR {
 				header("Pragma: private");
 				header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
 				header("Last-Modified: ".$lastModifiedDate);
-				header("Etag: $etag"); 
+				// header("Etag: $etag"); 
 
-				if (@$_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModifiedDate || @trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
+				$condition1 = (@$_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModifiedDate);
+				// $condition2 = (@trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag);
+
+				if ( $condition1 ) {
 					header("HTTP/1.1 304 Not Modified"); 
 					exit; 
 				}
@@ -182,5 +185,14 @@ class OZR {
 			throw new OrganizerException("Organizer not initialized");
 			die();
 		}
+	}
+
+	public static function clearCache() {
+		static::checkInitialized();
+		CacheData::clearAll();
+	}
+
+	public static function countCachedFiles() {
+		return CacheData::countAll();
 	}
 }
