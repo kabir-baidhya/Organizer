@@ -111,10 +111,7 @@ class CacheData	{
 		$dh = opendir($dir);
 		while($file = readdir($dh))
 		{
-			if(!is_dir($file))
-			{
-				@unlink($dir.$file);
-			}
+			if(!is_dir($file)) $count++;
 		}
 		closedir($dh);
 		return $count;
