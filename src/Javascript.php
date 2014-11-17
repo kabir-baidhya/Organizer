@@ -2,7 +2,7 @@
 
 namespace Gckabir\Organizer;
 
-class Javascript extends OrganizerObject {
+class Javascript extends OrganizerObject implements IVariableContainer {
 
 	protected $variables = array();
 	protected $extension = '.js';
