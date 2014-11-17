@@ -96,9 +96,7 @@ abstract class OrganizerObject {
 
 				if(file_exists($path))
 				{
-					ob_start();
-					include_once($path);
-					$code = ob_get_clean();
+					$code = file_get_contents($path);
 				} else throw new OrganizerException("{$path} not found");
 				
 			} else if(is_object($singleItem) and @$singleItem->type == 'embeded') {
