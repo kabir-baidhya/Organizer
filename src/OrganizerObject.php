@@ -2,6 +2,7 @@
 
 namespace Gckabir\Organizer;
 use Gckabir\Organizer\AwesomeCache\CacheData;
+use Gckabir\Organizer\Prv\Helper;
 
 abstract class OrganizerObject {
 
@@ -97,12 +98,36 @@ abstract class OrganizerObject {
 				if(file_exists($path))
 				{
 					$code = file_get_contents($path);
-				} else throw new OrganizerException("{$path} not found");
+
+				} else if(Helper::hasWildcards($singleItem))
+				{
+					# check if any kind of pattern is provided
+					$pattern = $this->config['basePath'].$singleItem;
+
+					if(Helper::endsWith($singleItem, '*')) {
+						$pattern	.= $this->extension;
+					} else if(!Helper::endsWith($singleItem, $this->extension)) {
+						$pattern	.= '*'.$this->extension;
+					}
+
+					$matches = glob($pattern);
+					echo $pattern;
+					print_r($matches);
+					$code  = '';
+					if(!empty($matches)) {
+						foreach($matches as $filePath) {
+							$code .= "\n".file_get_contents($filePath);
+						}
+					}
+
+				} else {
+					throw new OrganizerException("{$path} not found");
+				}
 				
 			} else if(is_object($singleItem) and @$singleItem->type == 'embeded') {
 				$code = $singleItem->code;
 			} else {
-				throw new OrganizerException("Invalid Javacode");
+				throw new OrganizerException("Invalid Javascript code");
 			}
 
 			$merged .= "\n".$code;
