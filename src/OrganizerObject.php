@@ -130,6 +130,8 @@ abstract class OrganizerObject {
 				throw new OrganizerException("Invalid Javascript code");
 			}
 
+			$code = $this->preMergeProcessCode($code);
+
 			$merged .= "\n".$code;
 		}
 
@@ -187,6 +189,10 @@ abstract class OrganizerObject {
 		}
 
 		return $content;
+	}
+
+	protected function preMergeProcessCode($code) {
+		return $code;
 	}
 
 	abstract function includeHere();

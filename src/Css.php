@@ -7,11 +7,12 @@ class Css extends OrganizerObject implements IVariableContainer {
 
 	protected $variables = array();
 	protected $extension = '.css';
-	
-	public function __construct($bundle, array $styles, $version)
-	{
-		parent::__construct($bundle, $styles, $version);
-	}
+	private $urlPattern = '(url\s*\(\s*[\'\"]?)((?![a-z]+:\/\/)[^\)\'\"\s]+)([\'\"]?\s*\))';
+
+public function __construct($bundle, array $styles, $version)
+{
+	parent::__construct($bundle, $styles, $version);
+}
 
 	/**
 	 * Initialize dynamic variables (in bulk)
@@ -32,7 +33,6 @@ class Css extends OrganizerObject implements IVariableContainer {
 	
 	public function output()
 	{
-		$this->processVariables();
 		return $this->signature().$this->output;
 	}
 
@@ -62,5 +62,57 @@ class Css extends OrganizerObject implements IVariableContainer {
 		return $value;
 	}
 
+
+
+	public function merge () {
+		parent::merge();
+
+		# variables
+
+		$this->processVariables();
+		
+		# fix relative paths in url()
+		$this->output = $this->fixRelativeUrls($this->output);
+
+		# remove all the @imports
+		$this->output = $this->removeImports($this->output);
+	}
+
+	private function fixRelativeUrls($content) {
+
+		$cssBaseUrl = $this->config['basePath'];
+
+		$pattern = '/'.$this->urlPattern.'/i';
+		
+		$cssBaseUrl = rtrim($cssBaseUrl, '/').'/';
+		$content = preg_replace($pattern, '${1}'.$cssBaseUrl.'$2$3', $content);
+		return $content;
+
+	}
+
+	protected function removeImports($code) {
+		//replace @imports	with actual file contents
+
+		$importPattern = '/@import\s*'.$this->urlPattern.'\s*;?/i';
+		preg_match_all($importPattern, $code, $matches);
+
+		if(!empty($matches)) {
+
+			foreach($matches[0] as $matchIndex=> $matchString) {
+
+				$filepath = $matches[2][$matchIndex];
+				if(file_exists($filepath))
+				{
+					$contents = file_get_contents($filepath);
+					$code = str_replace($matchString, $contents, $code);
+				} else {
+					throw new OrganizerException("@import: {$filepath} not found");
+				}
+			}
+
+		}
+
+		return $code;
+	}
 }
 

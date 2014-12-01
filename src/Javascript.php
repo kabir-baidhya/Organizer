@@ -7,6 +7,8 @@ class Javascript extends OrganizerObject implements IVariableContainer {
 	protected $variables = array();
 	protected $extension = '.js';
 
+	private $embededVarsDeclaration = false;
+
 	public function __construct($bundle, array $scripts, $version)
 	{
 		parent::__construct($bundle, $scripts, $version);
@@ -40,7 +42,7 @@ class Javascript extends OrganizerObject implements IVariableContainer {
 		$wrapCode = $this->config['wrap'];
 		$dependencies = $this->config['dependencies'];
 
-		$variablesJson = json_encode( (object) $this->variables );
+		$variablesJson = ($this->embededVarsDeclaration) ? '{}' : json_encode( (object) $this->variables );
 
 		if($wrapCode) {
 
@@ -109,6 +111,14 @@ class Javascript extends OrganizerObject implements IVariableContainer {
 		echo '<script type="text/javascript">'.$content.'</script>';
 	}	
 
+	public function embedVars() {
+
+		$content = 'var $vars = '.json_encode( (object) $this->variables ).';';
+		echo '<script type="text/javascript">'.$content.'</script>';
+
+		$this->embededVarsDeclaration = true;
+	}
+
 	/** 
 	 * Function for appending variables to '$vars' 
 	 * used only if 'appendVariables' is true
@@ -119,6 +129,7 @@ class Javascript extends OrganizerObject implements IVariableContainer {
 
 		return $func."($wrapperObject || {}, $vars)";
 	}
+
 
 }
 
