@@ -116,11 +116,11 @@ class Javascript extends OrganizerObject implements IVariableContainer {
 		$variablesJson = json_encode( (object) $this->variables );
 
 		if($this->config['appendVariables'] == true) {
-			$javascript .= 'var $vars = '. $this->appendVarsToObject('$vars', $variablesJson) .";\n";
+			$javascript = 'var $vars = '. $this->appendVarsToObject('$vars', $variablesJson) .";\n";
 		} else {
-			$javascript .= 'var $vars = '. $variablesJson .";\n";
+			$javascript = 'var $vars = '. $variablesJson .";\n";
 		}
-		
+
 		echo '<script type="text/javascript">'.$javascript.'</script>';
 
 		$this->embededVarsDeclaration = true;
