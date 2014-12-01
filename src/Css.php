@@ -84,7 +84,16 @@ public function __construct($bundle, array $styles, $version)
 
 		$pattern = '/'.$this->urlPattern.'/i';
 		
-		$cssBaseUrl = rtrim($cssBaseUrl, '/').'/';
+
+		# if being served from custom serverUri then go back to root first
+		$customServerUri = trim(OZR::getConfig('serverUri'), '/');
+
+		$slashCount = substr_count($customServerUri, '/');
+
+		$backToRoot = str_repeat('../', $slashCount);
+
+
+		$cssBaseUrl = $backToRoot.rtrim($cssBaseUrl, '/').'/';
 		$content = preg_replace($pattern, '${1}'.$cssBaseUrl.'$2$3', $content);
 		return $content;
 

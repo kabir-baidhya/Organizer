@@ -8,7 +8,8 @@ use Gckabir\Organizer\AwesomeCache\CacheData;
 class OZR {
 
 	private static $config = array (
-		'serverUrl'	=> '',
+		'baseUrl'	=> '',
+		'serverUri'	=> '',
 		'cacheDir'	=> '_organizer-cache/',
 		'cacheExpiration'	=> 1296000, //15-days
 		'automaticServe'	=> true,
@@ -49,7 +50,7 @@ class OZR {
 	public static function init( array $config = array())
 	{
 		if(isset($_SERVER['REQUEST_URI'])) {
-			static::$config['serverUrl'] = $_SERVER['REQUEST_URI'];//default
+			static::$config['baseUrl'] = $_SERVER['REQUEST_URI'];//default
 		}
 		
 		# Overriding config
@@ -194,5 +195,19 @@ class OZR {
 
 	public static function countCachedFiles() {
 		return CacheData::countAll();
+	}
+
+	public static function getBaseUrl() {
+		
+		$baseUrl = rtrim(static::getConfig('baseUrl'), '/').'/';
+		return $baseUrl;
+
+	}
+
+	public static function getServerUrl() {
+
+		$baseUrl = static::getBaseUrl();
+		$serverUri = ltrim(static::getConfig('serverUri'), '/');
+		return $baseUrl.$serverUri;
 	}
 }

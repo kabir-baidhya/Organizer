@@ -155,7 +155,7 @@ abstract class OrganizerObject {
 			$item->putInCache($content);
 		}
 
-		$serverUrl = OZR::getConfig('serverUrl');
+		$serverUrl = OZR::getServerUrl();
 		$parameter = $this->config['parameter'];
 		
 
