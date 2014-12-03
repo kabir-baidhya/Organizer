@@ -99,8 +99,7 @@ abstract class OrganizerObject {
 				{
 					$code = file_get_contents($path);
 
-				} else if(Helper::hasWildcards($singleItem))
-				{
+				} else if(Helper::hasWildcards($singleItem)) {
 					# check if any kind of pattern is provided
 					$pattern = $this->config['basePath'].$singleItem;
 
@@ -111,8 +110,7 @@ abstract class OrganizerObject {
 					}
 
 					$matches = glob($pattern);
-					echo $pattern;
-					print_r($matches);
+					
 					$code  = '';
 					if(!empty($matches)) {
 						foreach($matches as $filePath) {
@@ -126,11 +124,12 @@ abstract class OrganizerObject {
 				
 			} else if(is_object($singleItem) and @$singleItem->type == 'embeded') {
 				$code = $singleItem->code;
+				$path = $this->config['basePath'];
 			} else {
 				throw new OrganizerException("Invalid Javascript code");
 			}
 
-			$code = $this->preMergeProcessCode($code);
+			$code = $this->preMergeProcessCode(@$path, $code);
 
 			$merged .= "\n".$code;
 		}
@@ -191,7 +190,7 @@ abstract class OrganizerObject {
 		return $content;
 	}
 
-	protected function preMergeProcessCode($code) {
+	protected function preMergeProcessCode($path, $code) {
 		return $code;
 	}
 
