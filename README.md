@@ -11,8 +11,10 @@ Features
 - Minifying the bundle (merged code) using JShrink (for javascript) or CssMin (for CSS)
 - Caching those files 
 
+Getting Started
+========
 
-## Installation
+### Installation
 Installing Organizer [via Composer](https://getcomposer.org/doc/00-intro.md) is very simple . 
 Just add this in your composer.json 
 
@@ -21,7 +23,7 @@ Just add this in your composer.json
     }
 And run `composer install` or `update`
 
-## Step 1: Configuration
+### Step 1: Configuration
 Configuring as simple as:
 
 		// Organizer Config
@@ -39,7 +41,7 @@ Configuring as simple as:
 
 Just set the parameters and it's done. 
 
-## Step 2: Creating a bundle of js files
+### Step 2: Creating a bundle of js files
 
 		$js = \Gckabir\Organizer\OZR::organizeJS('homepage-js', array(
 			'javascript1',
@@ -54,7 +56,7 @@ Just set the parameters and it's done.
                 
 		// merge all files & build the bundle
 		$js->build();
-## Step 3: Using the bundle in html
+### Step 3: Using the bundle in html
 	<?php $js->includeHere() ?>
 
 
