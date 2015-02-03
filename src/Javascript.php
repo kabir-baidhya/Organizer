@@ -139,4 +139,3 @@ class Javascript extends OrganizerObject implements IVariableContainer {
 
 
 }
-

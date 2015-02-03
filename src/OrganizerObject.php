@@ -119,7 +119,7 @@ abstract class OrganizerObject {
 					}
 
 				} else {
-					throw new OrganizerException("{$path} not found");
+					throw new OrganizerException(realpath($path)." not found");
 				}
 				
 			} else if(is_object($singleItem) and @$singleItem->type == 'embeded') {
