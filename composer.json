@@ -18,8 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Gckabir\\Organizer\\": "src/",
-            "Gckabir\\Organizer\\Test\\": "tests/"
+            "Gckabir\\Organizer\\": "src/"
         }
     }
 }
