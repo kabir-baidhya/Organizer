@@ -1,141 +1,140 @@
-<?php 
+<?php
 
 namespace Gckabir\Organizer;
 
-class Javascript extends OrganizerObject implements IVariableContainer {
+class Javascript extends OrganizerObject implements IVariableContainer
+{
 
-	protected $variables = array();
-	protected $extension = '.js';
+    protected $variables = array();
+    protected $extension = '.js';
 
-	private $embededVarsDeclaration = false;
+    private $embededVarsDeclaration = false;
 
-	public function __construct($bundle, array $scripts, $version)
-	{
-		parent::__construct($bundle, $scripts, $version);
-	}
+    public function __construct($bundle, array $scripts, $version)
+    {
+        parent::__construct($bundle, $scripts, $version);
+    }
 
-	/**
-	 * Initialize dynamic variables (in bulk)
-	 */
-	public function vars(array $variables)
-	{
-		$this->variables = $variables;
-		return $this;
-	}
+    /**
+     * Initialize dynamic variables (in bulk)
+     */
+    public function vars(array $variables)
+    {
+        $this->variables = $variables;
 
-	/**
-	 * Sets a value of dynamic variable
-	 */
-	public function setVar($key, $value) {
-		$this->variables[$key]	 = $value;
-		return $this;
-	}
+        return $this;
+    }
 
-	public function output() {
-		$javascript = $this->signature();
-		
-		# variables
-		if($this->config['useStrict'] == true) {
-			$javascript .= "'use strict';\n";
-		}
+    /**
+     * Sets a value of dynamic variable
+     */
+    public function setVar($key, $value)
+    {
+        $this->variables[$key]     = $value;
 
-		$wrapCode = $this->config['wrap'];
-		$dependencies = $this->config['dependencies'];
+        return $this;
+    }
 
-		$variablesJson = ($this->embededVarsDeclaration) ? '{}' : json_encode( (object) $this->variables );
+    public function output()
+    {
+        $javascript = $this->signature();
 
-		if($wrapCode) {
+        # variables
+        if ($this->config['useStrict'] == true) {
+            $javascript .= "'use strict';\n";
+        }
 
-			$token= 'function';
-			$lBrace = '{ ';
-			$rBrace = '}';
-			$lBracket = chr(40);
-			$rBracket = chr(41);
+        $wrapCode = $this->config['wrap'];
+        $dependencies = $this->config['dependencies'];
 
-			if(is_string($dependencies)) {
-				$dependencies = explode(',', trim($dependencies));
-			}
+        $variablesJson = ($this->embededVarsDeclaration) ? '{}' : json_encode((object) $this->variables);
 
-			$dependencies['$vars'] = $variablesJson;
+        if ($wrapCode) {
+            $token = 'function';
+            $lBrace = '{ ';
+            $rBrace = '}';
+            $lBracket = chr(40);
+            $rBracket = chr(41);
 
-			$parameters = array();
-			$arguments = array();
+            if (is_string($dependencies)) {
+                $dependencies = explode(',', trim($dependencies));
+            }
 
-			
-			foreach ($dependencies as $key => $value) {
-				if(is_numeric($key)) {
-					$parameters[] = $value;
-					$arguments[] = $value;
-				} else {
-					$parameters[] = $key;
-					$arguments[] = $value;	
-				}
-			}
+            $dependencies['$vars'] = $variablesJson;
 
-			$parameterString = implode(',', $parameters);
-			$argumentString = implode(',', $arguments);
-			
+            $parameters = array();
+            $arguments = array();
 
-			$javascript .= $lBracket.$token.$lBracket.$parameterString.$rBracket.$lBrace."\n";
+            foreach ($dependencies as $key => $value) {
+                if (is_numeric($key)) {
+                    $parameters[] = $value;
+                    $arguments[] = $value;
+                } else {
+                    $parameters[] = $key;
+                    $arguments[] = $value;
+                }
+            }
 
-		} else {
+            $parameterString = implode(',', $parameters);
+            $argumentString = implode(',', $arguments);
 
-			if($this->config['appendVariables'] == true) {
-				$javascript .= 'var $vars = '. $this->appendVarsToObject('$vars', $variablesJson) .";\n";
-			} else {
-				$javascript .= 'var $vars = '. $variablesJson .";\n";
-			}
+            $javascript .= $lBracket.$token.$lBracket.$parameterString.$rBracket.$lBrace."\n";
+        } else {
+            if ($this->config['appendVariables'] == true) {
+                $javascript .= 'var $vars = '.$this->appendVarsToObject('$vars', $variablesJson).";\n";
+            } else {
+                $javascript .= 'var $vars = '.$variablesJson.";\n";
+            }
+        }
 
-		}
-		
-		$javascript .= $this->output."\n";
+        $javascript .= $this->output."\n";
 
-		if($wrapCode) {
-			$javascript .= $rBrace.$rBracket.$lBracket.$argumentString.$rBracket;
-		}
+        if ($wrapCode) {
+            $javascript .= $rBrace.$rBracket.$lBracket.$argumentString.$rBracket;
+        }
 
-		return $javascript;
-	}
+        return $javascript;
+    }
 
-	public function outputMinified()
-	{
-		return $this->signature(). \JShrink\Minifier::minify($this->output());	
-	}
+    public function outputMinified()
+    {
+        return $this->signature().\JShrink\Minifier::minify($this->output());
+    }
 
-	public function includeHere() {
-		echo '<script type="text/javascript" src="'.$this->build().'" ></script>';
-	}
+    public function includeHere()
+    {
+        echo '<script type="text/javascript" src="'.$this->build().'" ></script>';
+    }
 
-	public function embedHere() {
-		$content = $this->preEmbedContent();
-		echo '<script type="text/javascript">'.$content.'</script>';
-	}	
+    public function embedHere()
+    {
+        $content = $this->preEmbedContent();
+        echo '<script type="text/javascript">'.$content.'</script>';
+    }
 
-	public function embedVars() {
+    public function embedVars()
+    {
+        $variablesJson = json_encode((object) $this->variables);
 
-		$variablesJson = json_encode( (object) $this->variables );
+        if ($this->config['appendVariables'] == true) {
+            $javascript = 'var $vars = '.$this->appendVarsToObject('$vars', $variablesJson).";\n";
+        } else {
+            $javascript = 'var $vars = '.$variablesJson.";\n";
+        }
 
-		if($this->config['appendVariables'] == true) {
-			$javascript = 'var $vars = '. $this->appendVarsToObject('$vars', $variablesJson) .";\n";
-		} else {
-			$javascript = 'var $vars = '. $variablesJson .";\n";
-		}
+        echo '<script type="text/javascript">'.$javascript.'</script>';
 
-		echo '<script type="text/javascript">'.$javascript.'</script>';
+        $this->embededVarsDeclaration = true;
+    }
 
-		$this->embededVarsDeclaration = true;
-	}
+    /**
+     * Function for appending variables to '$vars'
+     * used only if 'appendVariables' is true
+     */
+    private function appendVarsToObject($wrapperObject, $vars)
+    {
+        $func =  'function (a,b){for(var c in b)a[c]=b[c];return a}';
 
-	/** 
-	 * Function for appending variables to '$vars' 
-	 * used only if 'appendVariables' is true
-	 */
-	private function appendVarsToObject($wrapperObject, $vars) {
-
-		$func =  'function (a,b){for(var c in b)a[c]=b[c];return a}';
-
-		return $func."($wrapperObject || {}, $vars)";
-	}
-
-
+        return $func."($wrapperObject || {}, $vars)";
+    }
 }

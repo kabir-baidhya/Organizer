@@ -1,128 +1,137 @@
-<?php 
+<?php
 
 namespace Gckabir\Organizer\AwesomeCache;
 
 use Gckabir\Organizer\OrganizerException;
 
-class CacheData	{
+class CacheData
+{
 
-	private static $config = array(
-		'directory' 	=>  'cache/',
-			'cacheExpiry'	=> 86400,//24 hour
-			'serialize'		=> true,
-			);
+    private static $config = array(
+        'directory'    =>  'cache/',
+        'cacheExpiry'    => 86400,//24 hour
+        'serialize'        => true,
+        );
 
-	private $key = null;
-	private $file = null;
+    private $key = null;
+    private $file = null;
 
-	public function __construct($key)
-	{
-		$this->key = $key;
-		$directory = static::$config['directory'];
-		$this->file = $directory.$this->key;
+    public function __construct($key)
+    {
+        $this->key = $key;
+        $directory = static::$config['directory'];
+        $this->file = $directory.$this->key;
 
-		if (!file_exists($directory) && !is_dir($directory)) 
-		{
-			mkdir($directory);
-		} 
-	}
+        if (!file_exists($directory) && !is_dir($directory)) {
+            mkdir($directory);
+        }
+    }
 
-	public function cachedData()
-	{
-		if(!$this->isCached()) return false;
+    public function cachedData()
+    {
+        if (!$this->isCached()) {
+            return false;
+        }
 
-		$contents = file_get_contents($this->file);
+        $contents = file_get_contents($this->file);
 
-		$serializationEnabled = static::$config['serialize'];
+        $serializationEnabled = static::$config['serialize'];
 
-		$data = $serializationEnabled ? unserialize($contents) : $contents;
+        $data = $serializationEnabled ? unserialize($contents) : $contents;
 
-		return $data;
-	}
+        return $data;
+    }
 
-	public function putInCache($data)
-	{
-		if(!$data) return false;
+    public function putInCache($data)
+    {
+        if (!$data) {
+            return false;
+        }
 
-		$serializationEnabled = static::$config['serialize'];
+        $serializationEnabled = static::$config['serialize'];
 
-		$data = $serializationEnabled ? serialize($data) : $data;
+        $data = $serializationEnabled ? serialize($data) : $data;
 
-		
-		$written = @file_put_contents($this->file, $data);
+        $written = @file_put_contents($this->file, $data);
 
-		if(!$written) {
-			throw new OrganizerException("Couldn't write to file: {$this->file}");
-		}
-	}
+        if (!$written) {
+            throw new OrganizerException("Couldn't write to file: {$this->file}");
+        }
+    }
 
-	public function isCached()
-	{
-		return file_exists($this->file) && is_file($this->file);
-	}
+    public function isCached()
+    {
+        return file_exists($this->file) && is_file($this->file);
+    }
 
-	public function isUsable()
-	{
-		return ( $this->duration() < static::$config['cacheExpiry'] );
-	}
+    public function isUsable()
+    {
+        return ($this->duration() < static::$config['cacheExpiry']);
+    }
 
-	public function duration()
-	{
-		if( !$this->isCached() ) return 0 ;
+    public function duration()
+    {
+        if (!$this->isCached()) {
+            return 0;
+        }
 
-		$duration = time() - $this->lastModified();
-		return $duration;
-	}
+        $duration = time() - $this->lastModified();
 
-	public function lastModified() {
-		clearstatcache();
-		return filemtime($this->file);
-	}
+        return $duration;
+    }
 
-	public function isCachedAndUsable()
-	{
-		return ( $this->isCached() and $this->isUsable() );
-	}
+    public function lastModified()
+    {
+        clearstatcache();
 
-	public static function config($config)
-	{
-		static::$config = $config + static::$config;
-	}
+        return filemtime($this->file);
+    }
 
-	public static function clearAll()
-	{
-		$dir = static::$config['directory'];
+    public function isCachedAndUsable()
+    {
+        return ($this->isCached() and $this->isUsable());
+    }
 
-		$dh = opendir($dir);
-		while($file = readdir($dh))
-		{
-			if(!is_dir($file))
-			{
-				@unlink($dir.$file);
-			}
-		}
-		closedir($dh);
-	}
+    public static function config($config)
+    {
+        static::$config = $config + static::$config;
+    }
 
-	public static function countAll() {
-		$count = 0;
-		$dir = static::$config['directory'];
+    public static function clearAll()
+    {
+        $dir = static::$config['directory'];
 
-		$dh = opendir($dir);
-		while($file = readdir($dh))
-		{
-			if(!is_dir($file)) $count++;
-		}
-		closedir($dh);
-		return $count;
-	}
+        $dh = opendir($dir);
+        while ($file = readdir($dh)) {
+            if (!is_dir($file)) {
+                @unlink($dir.$file);
+            }
+        }
+        closedir($dh);
+    }
 
-	public static function clear($key)
-	{
-		$that = new static($key);
+    public static function countAll()
+    {
+        $count = 0;
+        $dir = static::$config['directory'];
 
-		if( $that->isCached() ) @unlink($that->file);
-	}
+        $dh = opendir($dir);
+        while ($file = readdir($dh)) {
+            if (!is_dir($file)) {
+                $count++;
+            }
+        }
+        closedir($dh);
 
-}	
+        return $count;
+    }
 
+    public static function clear($key)
+    {
+        $that = new static($key);
+
+        if ($that->isCached()) {
+            @unlink($that->file);
+        }
+    }
+}
