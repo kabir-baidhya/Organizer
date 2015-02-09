@@ -8,6 +8,6 @@
 
 namespace Gckabir\Organizer;
 
-class OrganizerException extends \Exception
+class TestCase extends \PHPUnit_Framework_TestCase
 {
 }

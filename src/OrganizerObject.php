@@ -1,4 +1,10 @@
 <?php
+/*
+ * This file is part of the Organizer package.
+ *
+ * (c) Kabir Baidhya <kabeer182010@gmail.com>
+ *
+ */
 
 namespace Gckabir\Organizer;
 
@@ -133,7 +139,7 @@ abstract class OrganizerObject
         } elseif (Helper::hasWildcards($fileOrPattern)) {
 
             // if its pattern, get the merged code of all the files matched
-            $matches = Helper::filesByPattern($fileOrPattern);
+            $matches = $this->filesByPattern($fileOrPattern);
             if (!empty($matches)) {
                 foreach ($matches as $filePath) {
                     $code .= "\n".file_get_contents($filePath);
@@ -144,6 +150,28 @@ abstract class OrganizerObject
         }
 
         return $code;
+    }
+
+    /**
+     * Returns the list of relevent files(with corresponding extension)
+     * matched by the given pattern 
+     * @param string $patternText
+     * @return array
+     */
+    protected function filesByPattern($patternText)
+    {
+        # check if any kind of pattern is provided
+        $pattern = $this->config['basePath'].$patternText;
+
+        if (Helper::endsWith($patternText, '*')) {
+            $pattern    .= $this->extension;
+        } elseif (!Helper::endsWith($patternText, $this->extension)) {
+            $pattern    .= '*'.$this->extension;
+        }
+
+        $matches = glob($pattern);
+
+        return $matches;
     }
 
     public function build()
@@ -170,7 +198,7 @@ abstract class OrganizerObject
         $url = $serverUrl.'?'.http_build_query(array(
             $parameter        => $this->uniqueBundleString(),
             'ver'            => $this->version,
-        ));
+            ));
 
         return $url;
     }
