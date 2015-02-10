@@ -1,4 +1,3 @@
-#tests/
 tests/TestData/*
 vendor
 composer.lock
