@@ -6,7 +6,6 @@ use Gckabir\Organizer\TestCase;
 
 class CacheDataTest extends TestCase
 {
-
     public function __construct()
     {
         $config = [
