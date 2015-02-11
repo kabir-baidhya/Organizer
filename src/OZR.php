@@ -8,7 +8,7 @@
 
 namespace Gckabir\Organizer;
 
-use Gckabir\Organizer\AwesomeCache\CacheData;
+use Gckabir\Organizer\AwesomeCache\Cache;
 
 class OZR
 {
@@ -78,7 +78,7 @@ class OZR
             'serialize'        => false,
             );
 
-        CacheData::config($cacheConfig);
+        Cache::config($cacheConfig);
 
         static::$initialized = true;
 
@@ -147,7 +147,7 @@ class OZR
 
     private static function serveBundle($bundle, $contentType, $config)
     {
-        $content = new CacheData($bundle);
+        $content = new Cache($bundle);
 
         if ($content->isCachedAndUsable()) {
             header('Content-Type: '.$contentType);
@@ -193,12 +193,12 @@ class OZR
     public static function clearCache()
     {
         static::checkInitialized();
-        CacheData::clearAll();
+        Cache::clearAll();
     }
 
     public static function countCachedFiles()
     {
-        return CacheData::countAll();
+        return Cache::countAll();
     }
 
     public static function getBaseUrl()

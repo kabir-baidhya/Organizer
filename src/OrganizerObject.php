@@ -8,7 +8,7 @@
 
 namespace Gckabir\Organizer;
 
-use Gckabir\Organizer\AwesomeCache\CacheData;
+use Gckabir\Organizer\AwesomeCache\Cache;
 use Gckabir\Organizer\Misc\Helper;
 
 abstract class OrganizerObject
@@ -178,7 +178,7 @@ abstract class OrganizerObject
     {
         $uniqueString = $this->uniqueBundleString();
 
-        $item = new CacheData($uniqueString);
+        $item = new Cache($uniqueString);
         $isCachingEnabled = $this->config['cache'];
 
         if (!$isCachingEnabled or !$item->isCachedAndUsable()) {
@@ -214,7 +214,7 @@ abstract class OrganizerObject
 
         $uniqueString = $this->uniqueBundleString();
 
-        $data = new CacheData($uniqueString);
+        $data = new Cache($uniqueString);
 
         if ($cacheEnabled and $data->isCachedAndUsable()) {
             $content = $data->cachedData();
