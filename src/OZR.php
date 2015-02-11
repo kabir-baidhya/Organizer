@@ -8,7 +8,7 @@
 
 namespace Gckabir\Organizer;
 
-use Gckabir\Organizer\AwesomeCache\Cache;
+use Gckabir\AwesomeCache\Cache;
 
 class OZR
 {
@@ -48,14 +48,14 @@ class OZR
             ),
         );
 
-    private static $organizedJs;
-    private static $organizedCss;
-    private static $initialized = false;
+private static $organizedJs;
+private static $organizedCss;
+private static $initialized = false;
 
-    /* Static Methods */
-    public static function init(array $config = array())
-    {
-        if (isset($_SERVER['REQUEST_URI'])) {
+/* Static Methods */
+public static function init(array $config = array())
+{
+    if (isset($_SERVER['REQUEST_URI'])) {
             static::$config['baseUrl'] = $_SERVER['REQUEST_URI'];//default
         }
 
@@ -138,11 +138,11 @@ class OZR
             $config = static::getConfig('html');
             $bundle = $_GET[$htmlQuery];
             $contentType = 'text/html';
-        } else {
-            throw new OrganizerException("Resource not recognized");
-        }
+        } 
 
-        static::serveBundle($bundle);
+        if(isset($bundle)) {
+            static::serveBundle($bundle);
+        }
     }
 
     private static function serveBundle($bundle, $contentType, $config)

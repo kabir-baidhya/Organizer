@@ -25,10 +25,15 @@ class Javascript extends OrganizerObject implements IVariableContainer
      * Initialize dynamic variables (in bulk)
      */
     public function vars(array $variables)
-    {
+    {   
+        if(is_array($variables))
         $this->variables = $variables;
 
         return $this;
+    }
+
+    public function getVars() {
+        return $this->variables;
     }
 
     /**

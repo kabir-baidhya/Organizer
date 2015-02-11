@@ -8,7 +8,7 @@
 
 namespace Gckabir\Organizer;
 
-use Gckabir\Organizer\AwesomeCache\Cache;
+use Gckabir\AwesomeCache\Cache;
 use Gckabir\Organizer\Misc\Helper;
 
 abstract class OrganizerObject
@@ -33,7 +33,7 @@ abstract class OrganizerObject
         $this->config = OZR::getConfig($objectType);
     }
 
-    protected function getType()
+    public function getType()
     {
         $objectType = strtolower(basename(get_called_class()));
         $objectType = explode('\\', $objectType);
@@ -130,23 +130,22 @@ abstract class OrganizerObject
      */
     protected function getSourceCode($fileOrPattern)
     {
-        $path = $this->config['basePath'].$fileOrPattern.$this->extension;
+        $path = $this->config['basePath'].$fileOrPattern;
 
         $code  = '';
-        if (file_exists($path)) {
+        if (file_exists($path) && is_file($path)) {
             // if its a file get its code
             $code = file_get_contents($path);
-        } elseif (Helper::hasWildcards($fileOrPattern)) {
+        } elseif ($matchedFiles = glob($path) && !empty($matchedFiles)) {
 
             // if its pattern, get the merged code of all the files matched
-            $matches = $this->filesByPattern($fileOrPattern);
-            if (!empty($matches)) {
-                foreach ($matches as $filePath) {
-                    $code .= "\n".file_get_contents($filePath);
-                }
+            // $matches = $this->filesByPattern($fileOrPattern);
+            foreach ($matchedFiles as $filePath) {
+                $code .= "\n".file_get_contents($filePath);
             }
+            
         } else {
-            throw new OrganizerException($path." not found");
+            throw new FileNotFoundException($path." not found");
         }
 
         return $code;
