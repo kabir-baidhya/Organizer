@@ -6,7 +6,7 @@
  *
  */
 
-namespace Gckabir\Organizer;
+namespace Gckabir\Organizer\Exception;
 
 class OrganizerException extends \Exception
 {

@@ -8,7 +8,7 @@
 
 namespace Gckabir\Organizer;
 
-class Javascript extends OrganizerObject implements IVariableContainer
+class Javascript extends OrganizerObject implements VariableContainerInterface
 {
 
     protected $variables = array();
@@ -25,9 +25,10 @@ class Javascript extends OrganizerObject implements IVariableContainer
      * Initialize dynamic variables (in bulk)
      */
     public function vars(array $variables)
-    {   
-        if(is_array($variables))
-        $this->variables = $variables;
+    {
+        if (is_array($variables)) {
+            $this->variables = $variables;
+        }
 
         return $this;
     }

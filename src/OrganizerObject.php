@@ -9,7 +9,6 @@
 namespace Gckabir\Organizer;
 
 use Gckabir\AwesomeCache\Cache;
-use Gckabir\Organizer\Misc\Helper;
 
 abstract class OrganizerObject
 {
@@ -48,22 +47,17 @@ abstract class OrganizerObject
     public function add($item)
     {
         if (is_array($item)) {
-
-            foreach($item as $singleItem) {
-                
+            foreach ($item as $singleItem) {
                 $this->add($singleItem);
             }
-
         } elseif (is_string($item)) {
 
-            
             // Add only if the file doesn't exist already
-            if(!in_array($item, $this->includes)) {
+            if (!in_array($item, $this->includes)) {
                 $this->includes[] = $item;
             }
-
         } else {
-            throw new OrganizerException("Invalid filenames provided for add()");
+            throw new Exception\OrganizerException("Invalid filenames provided for add()");
         }
 
         return $this;
@@ -77,7 +71,7 @@ abstract class OrganizerObject
         if (is_string($item) and !in_array($item, $this->includes)) {
             array_unshift($this->includes, $item);
         } else {
-            throw new OrganizerException("Invalid filenames provided for addBefore()");
+            throw new Exception\OrganizerException("Invalid filenames provided for addBefore()");
         }
 
         return $this;
@@ -89,7 +83,7 @@ abstract class OrganizerObject
     public function addCode($string)
     {
         if (!is_string($string)) {
-            throw new OrganizerException("Invalid code for addCode()");
+            throw new Exception\OrganizerException("Invalid code for addCode()");
         }
 
         $code = (object) array(
@@ -125,7 +119,7 @@ abstract class OrganizerObject
                 $code = $singleItem->code;
                 $path = $this->config['basePath'];
             } else {
-                throw new OrganizerException("Invalid code");
+                throw new Exception\OrganizerException("Invalid code");
             }
 
             $code = $this->preMergeProcessCode(@$path, $code);
@@ -157,9 +151,8 @@ abstract class OrganizerObject
             foreach ($matchedFiles as $filePath) {
                 $code .= "\n".file_get_contents($filePath);
             }
-            
         } else {
-            throw new FileNotFoundException($path." not found");
+            throw new Exception\FileNotFoundException($path." not found");
         }
 
         return $code;

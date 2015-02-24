@@ -8,7 +8,7 @@
 
 namespace Gckabir\Organizer;
 
-interface IVariableContainer
+interface VariableContainerInterface
 {
     /**
      * Initialize dynamic variables (in bulk)

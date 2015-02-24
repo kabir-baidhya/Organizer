@@ -6,9 +6,8 @@
  *
  */
 
-namespace Gckabir\Organizer;
+namespace Gckabir\Organizer\Exception;
 
 class FileNotFoundException extends OrganizerException
 {
-	
 }
