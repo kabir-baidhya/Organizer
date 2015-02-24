@@ -4,8 +4,16 @@ namespace Gckabir\Organizer\Misc;
 
 use Gckabir\Organizer\TestCase;
 
+/**
+ * JUst a tes class
+ * @namespace Gckabir\Organizer\Misc
+ */
 class HelperTest extends TestCase
 {
+    /**
+     * This is just a test function
+     * @return void
+     */
     public function testStartsWithIsWorking()
     {
         $this->assertTrue(Helper::startsWith('Hello World', 'Hello'));

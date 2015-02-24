@@ -32,10 +32,6 @@ class Javascript extends OrganizerObject implements IVariableContainer
         return $this;
     }
 
-    public function getVars() {
-        return $this->variables;
-    }
-
     /**
      * Sets a value of dynamic variable
      */

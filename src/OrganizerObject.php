@@ -48,9 +48,22 @@ abstract class OrganizerObject
     public function add($item)
     {
         if (is_array($item)) {
-            $this->includes = array_merge($this->includes, $item);
-        } elseif (is_string($item) and !in_array($item, $this->includes)) {
-            $this->includes[] = $item;
+
+            foreach($item as $singleItem) {
+                
+                $this->add($singleItem);
+            }
+
+        } elseif (is_string($item)) {
+
+            
+            // Add only if the file doesn't exist already
+            if(!in_array($item, $this->includes)) {
+                $this->includes[] = $item;
+            }
+
+        } else {
+            throw new OrganizerException("Invalid filenames provided for add()");
         }
 
         return $this;
@@ -61,10 +74,10 @@ abstract class OrganizerObject
      */
     public function addBefore($item)
     {
-        if (is_array($item)) {
-            $this->includes = array_merge($item, $this->includes);
-        } elseif (is_string($item) and !in_array($item, $this->includes)) {
+        if (is_string($item) and !in_array($item, $this->includes)) {
             array_unshift($this->includes, $item);
+        } else {
+            throw new OrganizerException("Invalid filenames provided for addBefore()");
         }
 
         return $this;
@@ -76,7 +89,7 @@ abstract class OrganizerObject
     public function addCode($string)
     {
         if (!is_string($string)) {
-            throw new OrganizerException("Invalid code");
+            throw new OrganizerException("Invalid code for addCode()");
         }
 
         $code = (object) array(
@@ -133,10 +146,11 @@ abstract class OrganizerObject
         $path = $this->config['basePath'].$fileOrPattern;
 
         $code  = '';
+
         if (file_exists($path) && is_file($path)) {
             // if its a file get its code
             $code = file_get_contents($path);
-        } elseif ($matchedFiles = glob($path) && !empty($matchedFiles)) {
+        } elseif (($matchedFiles = glob($path)) && !empty($matchedFiles)) {
 
             // if its pattern, get the merged code of all the files matched
             // $matches = $this->filesByPattern($fileOrPattern);
@@ -149,28 +163,6 @@ abstract class OrganizerObject
         }
 
         return $code;
-    }
-
-    /**
-     * Returns the list of relevent files(with corresponding extension)
-     * matched by the given pattern 
-     * @param string $patternText
-     * @return array
-     */
-    protected function filesByPattern($patternText)
-    {
-        # check if any kind of pattern is provided
-        $pattern = $this->config['basePath'].$patternText;
-
-        if (Helper::endsWith($patternText, '*')) {
-            $pattern    .= $this->extension;
-        } elseif (!Helper::endsWith($patternText, $this->extension)) {
-            $pattern    .= '*'.$this->extension;
-        }
-
-        $matches = glob($pattern);
-
-        return $matches;
     }
 
     public function build()
