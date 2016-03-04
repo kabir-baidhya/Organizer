@@ -31,15 +31,15 @@ class JavascriptTest extends TestCase
         $js = new Javascript('testbundle', array(), '1.0');
         $this->assertAttributeEquals(array(), 'variables', $js);
         $myVariables = array(
-            'foo'    => 'Hello',
-            'bar'    => ' World',
+            'foo' => 'Hello',
+            'bar' => ' World',
         );
 
         $js->vars($myVariables);
 
         $this->assertAttributeEquals($myVariables, 'variables', $js);
 
-        $newVariables = array('foo'    => 'bar');
+        $newVariables = array('foo' => 'bar');
         $js->vars($newVariables);
 
         $this->assertAttributeNotEquals($myVariables, 'variables', $js);
@@ -52,8 +52,8 @@ class JavascriptTest extends TestCase
         $this->assertAttributeEquals(array(), 'variables', $js);
 
         $myVariables = array(
-            'foo'    => 'Hello',
-            'bar'    => ' World',
+            'foo' => 'Hello',
+            'bar' => ' World',
         );
 
         $js->vars($myVariables);
@@ -64,9 +64,9 @@ class JavascriptTest extends TestCase
         $this->assertAttributeNotEquals($myVariables, 'variables', $js);
 
         $expectedVariablesNow = array(
-            'foo'    => 'Hello World',
-            'bar'    => '',
-            'test'    => 'Testing',
+            'foo' => 'Hello World',
+            'bar' => '',
+            'test' => 'Testing',
         );
         $this->assertAttributeEquals($expectedVariablesNow, 'variables', $js);
     }
@@ -75,7 +75,7 @@ class JavascriptTest extends TestCase
     {
         $js = new Javascript('testbundle', array(), '1.0');
 
-        $result = $js->vars(array('foo'    => 'bar'));
+        $result = $js->vars(array('foo' => 'bar'));
 
         $this->assertInstanceOf('Gckabir\Organizer\Javascript', $result);
 
@@ -198,8 +198,8 @@ class JavascriptTest extends TestCase
         $expectedIncludes = array(
             'file1.js',
             (object) array(
-                'code'    => 'alert("Hello World")',
-                'type'    => 'embeded',
+                'code' => 'alert("Hello World")',
+                'type' => 'embeded',
             ),
             'file2.js',
         );

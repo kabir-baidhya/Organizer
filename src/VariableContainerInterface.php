@@ -11,12 +11,12 @@ namespace Gckabir\Organizer;
 interface VariableContainerInterface
 {
     /**
-     * Initialize dynamic variables (in bulk)
+     * Initialize dynamic variables (in bulk).
      */
     public function vars(array $variables);
 
     /**
-     * Sets a value of dynamic variable
+     * Sets a value of dynamic variable.
      */
     public function setVar($key, $value);
 }

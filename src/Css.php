@@ -10,7 +10,6 @@ namespace Gckabir\Organizer;
 
 class Css extends OrganizerObject implements IVariableContainer
 {
-
     protected $variables = array();
     protected $extension = '.css';
     private $urlPattern = '(url\s*\(\s*[\'\"]?)((?![a-z]+:\/\/)[^\)\'\"\s]+)([\'\"]?\s*\))';
@@ -21,7 +20,7 @@ class Css extends OrganizerObject implements IVariableContainer
     }
 
     /**
-     * Initialize dynamic variables (in bulk)
+     * Initialize dynamic variables (in bulk).
      */
     public function vars(array $variables)
     {
@@ -31,11 +30,11 @@ class Css extends OrganizerObject implements IVariableContainer
     }
 
     /**
-     * Sets a value of dynamic variable
+     * Sets a value of dynamic variable.
      */
     public function setVar($key, $value)
     {
-        $this->variables[$key]     = $value;
+        $this->variables[$key] = $value;
 
         return $this;
     }

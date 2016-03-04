@@ -5,14 +5,14 @@ namespace Gckabir\Organizer\Misc;
 use Gckabir\Organizer\TestCase;
 
 /**
- * JUst a tes class
+ * JUst a tes class.
+ *
  * @namespace Gckabir\Organizer\Misc
  */
 class HelperTest extends TestCase
 {
     /**
-     * This is just a test function
-     * @return void
+     * This is just a test function.
      */
     public function testStartsWithIsWorking()
     {

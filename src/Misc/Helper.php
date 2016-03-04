@@ -10,43 +10,48 @@ namespace Gckabir\Organizer\Misc;
 
 class Helper
 {
+    /**
+     * Checks if the a string starts with a given substring.
+     *
+     * @param string $haystack
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
 
-	/**
-	 * Checks if the a string starts with a given substring
-	 * @param string $haystack
-	 * @param string $needle
-	 * @return bool
-	 */
-	public static function startsWith($haystack, $needle)
-	{
-		$length = strlen($needle);
+        return substr($haystack, 0, $length) === $needle;
+    }
 
-		return (substr($haystack, 0, $length) === $needle);
-	}
+    /**
+     * Checks if the a string ends with a given substring.
+     *
+     * @param string $haystack
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
 
-	/**
-	 * Checks if the a string ends with a given substring
-	 * @param string $haystack
-	 * @param string $needle
-	 * @return bool
-	 */
-	public static function endsWith($haystack, $needle)
-	{
-		$length = strlen($needle);
-		if ($length == 0) {
-			return true;
-		}
+        return substr($haystack, -$length) === $needle;
+    }
 
-		return (substr($haystack, -$length) === $needle);
-	}
-
-	/**
-	 * Checks if the string contains wildcard symbols (*, ?, [, ])
-	 * @param string $text
-	 * @return bool
-	 */
-	public static function hasWildcards($text)
-	{
-		return (bool) preg_match('/(\*|\?|\[|\])/i', $text);
-	}
+    /**
+     * Checks if the string contains wildcard symbols (*, ?, [, ]).
+     *
+     * @param string $text
+     *
+     * @return bool
+     */
+    public static function hasWildcards($text)
+    {
+        return (bool) preg_match('/(\*|\?|\[|\])/i', $text);
+    }
 }

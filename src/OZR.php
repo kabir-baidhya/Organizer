@@ -12,52 +12,51 @@ use Gckabir\AwesomeCache\Cache;
 
 class OZR
 {
-
     private static $config = array(
-        'baseUrl'    => '',
-        'serverUri'    => '',
-        'cacheDir'    => '_organizer-cache/',
-        'cacheExpiration'    => 1296000, //15-days
-        'automaticServe'    => true,
-        'signature'            => true,
-        'css'    => array(
-            'basePath'            => 'css/',
-            'minify'            => false,
-            'cache'                => false,
-            'parameter'    => '_OZRcssSX',
+        'baseUrl' => '',
+        'serverUri' => '',
+        'cacheDir' => '_organizer-cache/',
+        'cacheExpiration' => 1296000, //15-days
+        'automaticServe' => true,
+        'signature' => true,
+        'css' => array(
+            'basePath' => 'css/',
+            'minify' => false,
+            'cache' => false,
+            'parameter' => '_OZRcssSX',
             'browserCacheMaxAge' => 864000, //10days
             ),
-        'javascript'    => array(
+        'javascript' => array(
 
             'useStrict' => false,
-            'basePath'    => 'scripts/',
-            'wrap'        => false,
+            'basePath' => 'scripts/',
+            'wrap' => false,
             'dependencies' => array(),
-            'minify'    => false,
-            'cache'        => false,
-            'parameter'    => '_OZRjsSX',
+            'minify' => false,
+            'cache' => false,
+            'parameter' => '_OZRjsSX',
             'browserCacheMaxAge' => 864000, //10days
-            'appendVariables'    => false,
+            'appendVariables' => false,
             ),
-        'html'    => array(
-            'parameter'    => '_OZRhtmlSX',
-            'basePath'    => 'templates/',
-            'minify'    => false,
-            'cache'        => false,
+        'html' => array(
+            'parameter' => '_OZRhtmlSX',
+            'basePath' => 'templates/',
+            'minify' => false,
+            'cache' => false,
             'browserCacheMaxAge' => 864000, //10days
             ),
         );
 
-private static $organizedJs;
-private static $organizedCss;
-private static $initialized = false;
+    private static $organizedJs;
+    private static $organizedCss;
+    private static $initialized = false;
 
 /* Static Methods */
 public static function init(array $config = array())
 {
     if (isset($_SERVER['REQUEST_URI'])) {
-            static::$config['baseUrl'] = $_SERVER['REQUEST_URI'];//default
-        }
+        static::$config['baseUrl'] = $_SERVER['REQUEST_URI'];//default
+    }
 
         # Overriding config
         foreach ($config as $key => $value) {
@@ -73,19 +72,19 @@ public static function init(array $config = array())
         # Initialize Cache
 
         $cacheConfig = array(
-            'directory'    => static::$config['cacheDir'],
-            'cacheExpiry'    => static::$config['cacheExpiration'],
-            'serialize'        => false,
+            'directory' => static::$config['cacheDir'],
+            'cacheExpiry' => static::$config['cacheExpiration'],
+            'serialize' => false,
             );
 
-        Cache::config($cacheConfig);
+    Cache::config($cacheConfig);
 
-        static::$initialized = true;
+    static::$initialized = true;
 
-        if (static::$config['automaticServe']) {
-            static::serve();
-        }
+    if (static::$config['automaticServe']) {
+        static::serve();
     }
+}
 
     public static function getConfig($var = null)
     {
@@ -138,9 +137,9 @@ public static function init(array $config = array())
             $config = static::getConfig('html');
             $bundle = $_GET[$htmlQuery];
             $contentType = 'text/html';
-        } 
+        }
 
-        if(isset($bundle)) {
+        if (isset($bundle)) {
             static::serveBundle($bundle);
         }
     }
@@ -159,17 +158,17 @@ public static function init(array $config = array())
             }
 
             $expires = $config['browserCacheMaxAge'];
-            $lastModifiedDate = gmdate("D, d M Y H:i:s", $content->lastModified())." GMT";
+            $lastModifiedDate = gmdate('D, d M Y H:i:s', $content->lastModified()).' GMT';
             $etag = md5($bundle);
             header('Cache-Control: private, max-age='.$expires.', pre-check='.$expires);
-            header("Pragma: private");
+            header('Pragma: private');
             header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
-            header("Last-Modified: ".$lastModifiedDate);
+            header('Last-Modified: '.$lastModifiedDate);
 
             $condition1 = (@$_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModifiedDate);
 
             if ($condition1) {
-                header("HTTP/1.1 304 Not Modified");
+                header('HTTP/1.1 304 Not Modified');
                 exit;
             }
 
@@ -178,7 +177,7 @@ public static function init(array $config = array())
         } else {
             # invalid query | cache expired | file not found
             header('HTTP/1.1 404 Not Found');
-            echo "<h1>404 Not Found</h1>";
+            echo '<h1>404 Not Found</h1>';
         }
         die();
     }
@@ -186,7 +185,7 @@ public static function init(array $config = array())
     private static function checkInitialized()
     {
         if (!static::$initialized) {
-            throw new OrganizerException("Organizer not initialized");
+            throw new OrganizerException('Organizer not initialized');
         }
     }
 

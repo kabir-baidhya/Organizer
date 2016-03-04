@@ -12,7 +12,6 @@ use Gckabir\AwesomeCache\Cache;
 
 abstract class OrganizerObject
 {
-
     protected $bundle = null;
     protected $includes = array();
     protected $output = null;
@@ -42,7 +41,7 @@ abstract class OrganizerObject
     }
 
     /**
-     * include a new file
+     * include a new file.
      */
     public function add($item)
     {
@@ -57,38 +56,38 @@ abstract class OrganizerObject
                 $this->includes[] = $item;
             }
         } else {
-            throw new Exception\OrganizerException("Invalid filenames provided for add()");
+            throw new Exception\OrganizerException('Invalid filenames provided for add()');
         }
 
         return $this;
     }
 
     /**
-     * include a file before all other includes
+     * include a file before all other includes.
      */
     public function addBefore($item)
     {
         if (is_string($item) and !in_array($item, $this->includes)) {
             array_unshift($this->includes, $item);
         } else {
-            throw new Exception\OrganizerException("Invalid filenames provided for addBefore()");
+            throw new Exception\OrganizerException('Invalid filenames provided for addBefore()');
         }
 
         return $this;
     }
 
     /**
-     * Add code directly
+     * Add code directly.
      */
     public function addCode($string)
     {
         if (!is_string($string)) {
-            throw new Exception\OrganizerException("Invalid code for addCode()");
+            throw new Exception\OrganizerException('Invalid code for addCode()');
         }
 
         $code = (object) array(
-            'type'        => 'embeded',
-            'code'        => $string,
+            'type' => 'embeded',
+            'code' => $string,
             );
         $this->includes[] = $code;
     }
@@ -102,7 +101,7 @@ abstract class OrganizerObject
         return OZR::getConfig('signature')
         ? (
             $a."\n".
-            $b.$this->bundle.' v'.$this->version.' | '.gmdate("M d Y H:i:s")." UTC\n".
+            $b.$this->bundle.' v'.$this->version.' | '.gmdate('M d Y H:i:s')." UTC\n".
             $b.'Organized by Organizer'."\n".
             $b.'https://github.com/kabir-baidhya/organizer'."\n".
             $c."\n"
@@ -119,7 +118,7 @@ abstract class OrganizerObject
                 $code = $singleItem->code;
                 $path = $this->config['basePath'];
             } else {
-                throw new Exception\OrganizerException("Invalid code");
+                throw new Exception\OrganizerException('Invalid code');
             }
 
             $code = $this->preMergeProcessCode(@$path, $code);
@@ -133,13 +132,13 @@ abstract class OrganizerObject
     }
 
     /**
-     * Get source code from a file or merged-code from files matched by pattern
+     * Get source code from a file or merged-code from files matched by pattern.
      */
     protected function getSourceCode($fileOrPattern)
     {
         $path = $this->config['basePath'].$fileOrPattern;
 
-        $code  = '';
+        $code = '';
 
         if (file_exists($path) && is_file($path)) {
             // if its a file get its code
@@ -152,7 +151,7 @@ abstract class OrganizerObject
                 $code .= "\n".file_get_contents($filePath);
             }
         } else {
-            throw new Exception\FileNotFoundException($path." not found");
+            throw new Exception\FileNotFoundException($path.' not found');
         }
 
         return $code;
@@ -180,8 +179,8 @@ abstract class OrganizerObject
         $parameter = $this->config['parameter'];
 
         $url = $serverUrl.'?'.http_build_query(array(
-            $parameter        => $this->uniqueBundleString(),
-            'ver'            => $this->version,
+            $parameter => $this->uniqueBundleString(),
+            'ver' => $this->version,
             ));
 
         return $url;

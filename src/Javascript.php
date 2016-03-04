@@ -10,7 +10,6 @@ namespace Gckabir\Organizer;
 
 class Javascript extends OrganizerObject implements VariableContainerInterface
 {
-
     protected $variables = array();
     protected $extension = '.js';
 
@@ -22,7 +21,7 @@ class Javascript extends OrganizerObject implements VariableContainerInterface
     }
 
     /**
-     * Initialize dynamic variables (in bulk)
+     * Initialize dynamic variables (in bulk).
      */
     public function vars(array $variables)
     {
@@ -34,11 +33,11 @@ class Javascript extends OrganizerObject implements VariableContainerInterface
     }
 
     /**
-     * Sets a value of dynamic variable
+     * Sets a value of dynamic variable.
      */
     public function setVar($key, $value)
     {
-        $this->variables[$key]     = $value;
+        $this->variables[$key] = $value;
 
         return $this;
     }
@@ -137,11 +136,11 @@ class Javascript extends OrganizerObject implements VariableContainerInterface
 
     /**
      * Function for appending variables to '$vars'
-     * used only if 'appendVariables' is true
+     * used only if 'appendVariables' is true.
      */
     private function appendVarsToObject($wrapperObject, $vars)
     {
-        $func =  'function (a,b){for(var c in b)a[c]=b[c];return a}';
+        $func = 'function (a,b){for(var c in b)a[c]=b[c];return a}';
 
         return $func."($wrapperObject || {}, $vars)";
     }
