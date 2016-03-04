@@ -1,6 +1,8 @@
 
 Organizer
 =========
+**Note: This is deprecated, better use things like [gulp](http://gulpjs.com/), [webpack](https://webpack.github.io/) or [browserify](http://browserify.org/) to better organize your stuffs**
+
 It is something that can help you better organize your static files(javascript/css) in your PHP based project. 
 
 Just organize your javascript/css files in what ever ways you want, keeping related code in seperate files and directories and later organizer can merge & minify them so that it could be fetched just by a single http request.
